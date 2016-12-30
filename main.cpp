@@ -14,7 +14,7 @@
 
 char lodeStrTest []={'a','\0'};
 
-IOBoard* IOBoardHandler [2];
+IOBoard* IOBoardHandler [3];
 /*
  * The USB data must be 4 byte aligned if DMA is enabled. This macro handles
  * the alignment, if necessary (it's actually magic, but don't tell anyone).
@@ -60,7 +60,7 @@ int main(void)
 	init();
 
 	initDiscoveryBoard();
-
+/**/
 	//panel 1
 	IOBoard panel1(PANEL_1);
 	panel1.initADC();
@@ -74,24 +74,33 @@ int main(void)
 	panel2.initADC();
 	panel2.initButtons();
 	panel2.initLeds();
+	IOBoardHandler[1] = &panel2; //link the panel instance to the handler.
 
 	//panel 3
 	IOBoard panel3(PANEL_3);
 	panel3.initLeds();
 	panel3.initButtons();
-
+/**/
 	//panel4
 	IOBoard panel4(PANEL_4);
 	panel4.initLeds();
 	panel4.initButtons();
+/*
+	//panel 5
+	IOBoard panel5(PANEL_5);
+	//panel5.initADC();
+	panel5.initButtons();
+	panel5.initLeds();
+	IOBoardHandler[2] = &panel5; //link the panel instance to the handler.
 
-//	for (uint16_t i = 0;i<16;i++){
+
+	for (uint16_t i = 0;i<16;i++){
 		//panel2.setLed(i,true);
-//		panel4.setLed(i,false);
-//	}
+		panel5.setLed(i,true);
+	}
 
+*/
 
-	IOBoardHandler[1] = &panel2; //link the panel instance to the handler.
 
 
 
@@ -99,14 +108,22 @@ int main(void)
 	printf("send 'v' for adc values \r\n");
 	while (1)
 	{
+		/**/
 		panel1.refresh(millis);
 		panel2.refresh(millis);
 		panel3.refresh(millis);
+
 		panel4.refresh(millis);
+
+		//panel5.refresh(millis);
 		panel1.demoModeLoop();
 		panel2.demoModeLoop();
 		panel3.demoModeLoop();
 		panel4.demoModeLoop();
+		//panel5.demoModeLoop();
+		/* */
+	//	panel4.demoModeLoop();
+/**/
 		for (uint16_t i = 0;i<4;i++){
 			if (panel4.getButtonEdgeDePressed(i)){
 				printf("button %d edge unpressed!\r\n", i);
@@ -184,9 +201,12 @@ int main(void)
 		}
 		STM_EVAL_LEDOn(LED6);
 		//blinkTheLED();
+
+		 /**/
 	}
 
 	return 0;
+
 }
 
 
@@ -337,12 +357,14 @@ void ADC_IRQHandler() {
 		   default:
 				if (counter<6){
 					IOBoardHandler[0]->ADCInterruptHandler(counter - 2, value); //IOBoard handle triggers.
-				}else{
+				}else if (counter < 10){
 					IOBoardHandler[1]->ADCInterruptHandler(counter - 6, value); //IOBoard handle triggers.
+				}else if (counter < 14){
+					IOBoardHandler[1]->ADCInterruptHandler(counter - 10, value); //IOBoard handle triggers.
 				}
 
 				counter++;
-				if (counter ==10){
+				if (counter ==10){  //<---------------- change to 14
 					counter =0;
 				}
 				break;

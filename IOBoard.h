@@ -22,7 +22,8 @@ typedef enum
   PANEL_1 = 0,
   PANEL_2 = 1,
   PANEL_3 = 2,
-  PANEL_4
+  PANEL_4 = 3,
+  PANEL_5 = 4
 } PanelId_TypeDef;
 
 

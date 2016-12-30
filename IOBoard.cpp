@@ -23,10 +23,10 @@ IOBoard::IOBoard(PanelId_TypeDef panelId){
 		ledPeripheral = RCC_AHB1Periph_GPIOC;
 
 		numberOfButtons =4;
-		buttonPins[0] = GPIO_Pin_13; //two buttons per pin
-		buttonPins[1] = GPIO_Pin_14; //two buttons per pin
-		buttonPort = GPIOB;
-		buttonPeripheral = RCC_AHB1Periph_GPIOB;
+		buttonPins[0] = GPIO_Pin_8; //two buttons per pin
+		buttonPins[1] = GPIO_Pin_9; //two buttons per pin
+		buttonPort = GPIOA;
+		buttonPeripheral = RCC_AHB1Periph_GPIOA;
 
 		adcPins[0] = GPIO_Pin_0;
 		adcPins[1] = GPIO_Pin_1;
@@ -101,6 +101,29 @@ IOBoard::IOBoard(PanelId_TypeDef panelId){
 		buttonPins[1] = GPIO_Pin_11; //two buttons per pin
 		buttonPort = GPIOB;
 		buttonPeripheral = RCC_AHB1Periph_GPIOB;
+	}else if (panelId == PANEL_5){
+		numberOfLeds = 4;
+		ledCathodePins[0] = GPIO_Pin_0;
+		ledAnodePins[0] = GPIO_Pin_1,
+		ledAnodePins[1] = GPIO_Pin_2;
+		ledAnodePins[2] = GPIO_Pin_13;
+		ledAnodePins[3] = GPIO_Pin_14 ;
+		ledPort = GPIOB;
+		ledPeripheral = RCC_AHB1Periph_GPIOB;
+
+		numberOfButtons =4;
+		buttonPins[0] = GPIO_Pin_4; //two buttons per pin
+		buttonPins[1] = GPIO_Pin_5; //two buttons per pin
+		buttonPort = GPIOC;
+		buttonPeripheral = RCC_AHB1Periph_GPIOB;
+
+		adcPins[0] = GPIO_Pin_4;
+		adcPins[1] = GPIO_Pin_5;
+		adcPins[2] = GPIO_Pin_6;
+		adcPins[3] = GPIO_Pin_7;
+		adcPort  = GPIOA;
+		adcPeripheral = RCC_AHB1ENR_GPIOAEN;
+
 	}
 
 	buttonTimer = 0;
@@ -263,6 +286,7 @@ void IOBoard::initADC(){
 
 		//ADC_InitStructure.ADC_NbrOfConversion= 6;  //<----------------------------------------------------------------CHANGE ACCORDINGLY
 		ADC_InitStructure.ADC_NbrOfConversion= 10;  //<----------------------------------------------------------------CHANGE ACCORDINGLY should be static!
+		//ADC_InitStructure.ADC_NbrOfConversion= 14;  //<----------------------------------------------------------------CHANGE ACCORDINGLY should be static!
 
 		ADC_Init(ADC1, &ADC_InitStructure);
 
@@ -301,11 +325,16 @@ void IOBoard::initADC(){
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 4, ADC_SampleTime_480Cycles);
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 5, ADC_SampleTime_480Cycles);
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_13, 6, ADC_SampleTime_480Cycles);
-	} if (panelId == PANEL_2){
+	}else if (panelId == PANEL_2){
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_0, 7, ADC_SampleTime_480Cycles); ///PA0  //channel0
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 8, ADC_SampleTime_480Cycles);
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 9, ADC_SampleTime_480Cycles);
 		ADC_RegularChannelConfig(ADC1, ADC_Channel_3, 10, ADC_SampleTime_480Cycles);
+	}else if (panelId == PANEL_5){
+		ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 11, ADC_SampleTime_480Cycles); ///PA4 channel 4
+		ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 12, ADC_SampleTime_480Cycles);
+		ADC_RegularChannelConfig(ADC1, ADC_Channel_6, 13, ADC_SampleTime_480Cycles);
+		ADC_RegularChannelConfig(ADC1, ADC_Channel_7, 14, ADC_SampleTime_480Cycles);
 	}
 	adcInitialized = true;
 }
